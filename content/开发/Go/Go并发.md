@@ -1,0 +1,360 @@
+---
+创建: 2025-11-23
+tags:
+  - 开发/Go/并发
+---
+
+```table-of-contents
+title: 
+style: nestedList # TOC style (nestedList|nestedOrderedList|inlineFirstLevel)
+minLevel: 0 # Include headings from the specified level
+maxLevel: 0 # Include headings up to the specified level
+include: 
+exclude: 
+includeLinks: true # Make headings clickable
+hideWhenEmpty: false # Hide TOC if no headings are found
+debugInConsole: false # Print debug info in Obsidian console
+```
+
+## 1 协程
+
+### 1.1 概述
+
+Go 通过协程机制实现并发，可以理解为轻量级的线程。
+
+> [!cite]
+> 之前看一篇文章，说了在某情况下协程是单线程并发，又说另外情况下协程是多线程并行；但我没太看明白，感觉他讲的有点乱；
+> 还看过关于协程机制的文章，不过理解得不是很好；
+> 这些东西等之后有时间去研究研究，现在先跳过了。
+
+通过下面得语法就能启动一个新的协程，跟 `defer` 的语法很像；而且也是函数名和参数在当前协程 (Go 启动时会开启一个默认的协程去运行 `main` 函数) 计算，函数体在新的协程执行。
+
+```go
+go func(){}()
+```
+
+GO 的协程共享相同的地址空间，因此访问同一段内存时需要同步。不过 Go 一般不用共享内存的方式实现协程间通信，而是用通信的方式共享内存 (这话是从一篇文章上学来的，说的还挺巧妙的)。
+
+### 1.2 使用
+
+我们先用这样的例子看看不用协程要花多长时间
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	start := time.Now()
+	for i := 0; i < 10; i++ {
+		func() {
+			time.Sleep(time.Second)
+		}()
+	}
+	fmt.Println(time.Since(start))
+}
+```
+
+```
+10.0034361s
+```
+
+然后在 `func() {}()` 前面加个 `go` 关键字；另外由于我们主协程运行完是不管还有没有其他协程运行的，会直接退出。所以这里我们还需要用 `sync.WaitGroup{}` 机制让主协程等待其他协程退出。
+
+```go
+var wg = sync.WaitGroup{}
+
+func main() {
+	start := time.Now()
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			time.Sleep(time.Second)
+		}()
+	}
+	wg.Wait()
+	fmt.Println(time.Since(start))
+}
+```
+
+```
+1.0007916s
+```
+
+一个 `10` 秒一个 `1` 秒，对比还是很明显的。
+
+## 2 信道
+
+### 2.1 chan
+
+#### 2.1.1 概述
+
+想要在两个协程间通信，我们可以使用 `chan` 信道。
+
+`chan` 并不是 `int` 这种预定义的类型，而是和 `[]T` `map[T]U` 一样现生成的类型，`chan` 是一个关键字，后面跟上一个类型 `T` 用来生成一个 `T` 类型的信道。比如 `chan int` 表示一个 `int` 信道。
+
+我们可以把 `chan` 看出一个数据传递的管道，使用 `<-` 运算符可以操作这个管道；具体来说，对于一个 `chan int` 类型的信道变量 `ch`：
+1. 如果 `ch` 在 `<-` 运算符左边，比如 `ch <- 123`；表示向 `ch` 中写入数据；
+2. 如果在右边，比如 `<- ch`；表示从 `ch` 读取数据。
+
+如果信道没有缓冲 (后面会讲)，信道的读写双方在对方使用 `<-` 操作信道之前，都会使当前协程处于阻塞状态；等到另一方向信道写入 (读取) 数据时，当前方会解除阻塞状态，并读取 (写入) 数据。
+
+同一个协程不能同时是同一个信道的读方和写方，否则会造成程序崩溃。
+
+```
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan send]:
+main.main()
+        C:/Users/baojy/Desktop/_try/go_try/main.go:7 +0x36
+exit status 2
+```
+
+#### 2.1.2 例子
+
+下面来看一个使用 `chan` 的例子
+
+```go
+func Factorial(n int, ch chan string) {
+	res := 1
+	for i := 2; i <= n; i++ {
+		res *= i
+	}
+	ch <- fmt.Sprintf("%d! = %d", n, res)
+}
+
+func main() {
+	ch := make(chan string)
+	go Factorial(1, ch)
+	go Factorial(2, ch)
+	go Factorial(3, ch)
+
+	for i := 0; i < 3; i++ {
+		res := <-ch
+		fmt.Println(res)
+	}
+}
+```
+
+```
+1! = 1
+3! = 6
+2! = 2
+```
+
+上面代码中，函数 `Factorial` 的作用是求阶乘；它接收两个参数，一个是要求其阶乘的数，另一个是用来协程间通信的信道 `ch chan string`；函数体部分，其计算阶乘完成后，会通过 `<-` 运算符把结果发送到信道 `ch` 中。
+
+然后，在 `main` 函数中，我们先是用 `make` 创建了一个信道 `ch`(信道是引用类型，所以需要用 `make` 创建，不然值为 `nil`)；然后调用三次 `Factorial` 分别计算 `1` `2` `3` 的阶乘；最后，循环三次使用 `<-ch` 从信道中接收结果。
+
+注意看输出的顺序，如果多运行几次，可以看到输出的顺序是不一样的，而且不是按照调用顺序输出的。我们来分析一下这个行为。
+
+使用 `go Factorial` 开启三个协程后，它们会立即各自运行；然后主协程运行到 `for` 中第一次循环的 `res := <-ch` 这个位置，我们假设这时候三个 `go Factorial` 还没有执行完毕，那主协程就会在这里阻塞。
+
+然后，不知道哪个 `go Factorial` 先运行完了，执行 `ch <- fmt.Sprintf("%d! = %d", n, res)` 向信道中写入内容，这时候处于接收方的主协程就会解出阻塞，读取到结果，然后输出结果。
+然后剩下两个 `go Factorial` 谁先执行完也是不确定的。总之是重复上述过程。
+
+就是因为三个协程一起执行，谁先结束是不确定的，所以输出的顺序也是伪随机的。
+
+#### 2.1.3 带缓冲的信道
+
+在使用 `make` 初始化一个信道时，可以使用第二个参数为信道设置一个缓冲区。
+
+```
+ch := make(chan string, 2)
+```
+
+当一个信道有缓冲区后，
+1. 对于发送方，仅当缓冲区满了，无法继续写入数据了，才会阻塞
+2. 对于接收方，仅当缓冲区空了，无法继续读取数据了，才会阻塞
+
+在有缓冲区的情况下，我们甚至可以在同一个协程读写信道 (只是实验，实际不应该这么搞)，只要写的时候缓冲区没满、读的时候缓冲区没空，不会触发阻塞就行。
+如果把下面代码注释的那行删掉，运行代码就会报错。引用缓冲区满了，但是我们的程序运行不到能够消费缓冲区的代码了 (被 `ch <- 3` 堵住了)。
+
+```go
+func main() {
+	ch := make(chan int, 2)
+	ch <- 1
+	ch <- 2
+	// ch <- 3
+	fmt.Println(<-ch)
+	fmt.Println(<-ch)
+}
+```
+
+### 2.2 close
+
+我们可以用 `close` 函数来关闭一个信道，一般应该有发送者执行这个操作，表示没有需要发送的数据了；因为只有接收者可以通过 `<- ch` 返回的第二个值 (`v, ok := <- ch`) 来判断信道是否已经关闭。
+
+当然，我们不是必须关闭信道，因为垃圾回收会自动帮我们释放掉不再使用的信道。`close` 只是通知接收者通信结束的一种方式，不是必须的。
+
+> [!tip] `close(ch)` 后执行 `<-ch`
+> 如果对一个已经被 `close` 的信道 `ch` 执行多次 `<-ch`，则每次都会直接返回 `<类型空值>, false`；而不是 `<-ch` 一次后面再执行就阻塞。
+> 
+> 利用这个特性可以利用 `chan` 实现广播通知 (而利用正常的 `ch <- xxx` 则不行，因为 `xxx` 只能被一个 `<-ch` 消费 (无缓冲情况下))
+
+例如下面的代码中，`Fib` 函数所在协程每次循环都会向 `ch` 发送一个值，`main` 协程这边的任务就是接收值并打印。
+不过我们并不想关心 `Fib` 内执行了几次循环，就可以让 `Fib` 在执行完后使用 `close` 通知一声结束了；然后主协程通过每次循环都判断是否 `ok` 来确定是否继续取值并打印。
+
+```go
+func Fib(n int, ch chan int) {
+	a, b := 0, 1
+	for i := 0; i < n; i++ {
+		a, b = b, a+b
+		ch <- a
+	}
+	close(ch)
+}
+
+func main() {
+	ch := make(chan int)
+	go Fib(10, ch)
+	for {
+		v, ok := <-ch
+		if !ok {
+			break
+		}
+		fmt.Print(v, " ")
+	}
+}
+```
+
+```
+1 1 2 3 5 8 13 21 34 55
+```
+
+### 2.3 for range
+
+`for range` 语法糖是能识别信道的结束的。因此上面的代码也可以这样写：
+
+```go
+for v := range ch {
+	fmt.Print(v, " ")
+}
+```
+
+### 2.4 chan 的方向
+
+默认的 `chan` 是双向的，每个能访问到它的协程都可以读或写它。
+
+但我们也可以让它有方向，使得特定协程只能读 (写)，防止一个协程内即读又写。
+
+只读信道长这样
+
+```go
+<-chan T
+```
+
+只写信道长这样
+
+```go
+chan<- T
+```
+
+双向 `chan` 可以赋值给只读 (写) `chan`，但反过来不行。
+
+让我们改一下上面阶乘的例子：
+
+```go
+func Factorial(n int, ch chan<- string) {
+	res := 1
+	for i := 2; i <= n; i++ {
+		res *= i
+	}
+	ch <- fmt.Sprintf("%d! = %d", n, res)
+}
+
+func main() {
+	ch := make(chan string)
+
+	go Factorial(3, ch)
+
+	var r_ch <-chan string = ch
+	fmt.Println(<-r_ch)
+}
+```
+
+可以看到，我们用只读信道 `r_ch <-chan string` 来接收，用只写信道 `ch chan<- string` 来写入。
+
+## 3 select
+
+`select` 语句可以在一堆候选 `chan` 中选择一个准备好的，从里面读取数据，执行对应 `case` 的代码。
+如果都没准备好，那就阻塞；如果都准备好了，那就随机选择一个。
+
+下面的综合代码演示了 `select` 的用法 (注意 `select` 只会选择一次，要想多次选择，需要在外面套一层循环)。
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+var wg = sync.WaitGroup{}
+
+func Factorial(n int, ch chan<- string) {
+	res := 1
+	for i := 2; i <= n; i++ {
+		res *= i
+	}
+	ch <- fmt.Sprintf("%d! = %d", n, res)
+	wg.Done()
+}
+
+func Fib(n int, ch chan<- int) {
+	a, b := 0, 1
+	for i := 0; i < n; i++ {
+		a, b = b, a+b
+		ch <- a
+	}
+	wg.Done()
+}
+
+func main() {
+	wg.Add(2)
+	FacCh := make(chan string)
+	FibCh := make(chan int)
+	exit := make(chan struct{})
+	go Factorial(4, FacCh)
+	go Fib(5, FibCh)
+	go func() {
+		wg.Wait()
+		exit <- struct{}{}
+	}()
+
+	for {
+		select {
+		case v := <-FacCh:
+			fmt.Println(v)
+		case v := <-FibCh:
+			fmt.Println(v)
+		case <-exit:
+			return
+		}
+	}
+}
+```
+
+除了 `case`，`select` 也可以像 `switch` 那样有一个 `default` 分支；如果所有其他分支的 `chan` 都没准备好，那就执行这个分支。
+
+## 4 sync
+
+### 4.1 sync.WaitGroup
+
+### 4.2 sync.Once
+
+### 4.3 协程锁
+
+#### 4.3.1 sync.Mutex
+
+#### 4.3.2 sync.RWMutex
+
+### 4.4 sync.Map
+
+### 4.5 sync.Pool
+
+## 5 sync/atomic

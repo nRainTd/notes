@@ -12,5 +12,5 @@ replit.nix
 
 BatchRun.ffs_batch
 sync.ffs_db
-/content/*
+/content/**
 !/content/.gitignore
