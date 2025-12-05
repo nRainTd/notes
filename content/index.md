@@ -1,6 +1,15 @@
 ---
-title: Welcome to Quartz
+title: 饯雨的笔记仓库
 ---
 
-This is a blank Quartz installation.
-See the [documentation](https://quartz.jzhao.xyz) for how to get started.
+# 欢迎
+
+这里是饯雨(nRainTd, No Rain Today)的笔记仓库，里面收录了我平时记的一些笔记。
+
+> [!info]
+> 但由于我自己本地的笔记仓库(Obsidian)中图片等附件是乱放的，不太容易上传；所以只上传了一些附件整齐的笔记；其他笔记等我闲下来整理好了再上传。
+
+
+
+
+

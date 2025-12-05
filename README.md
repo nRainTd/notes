@@ -1,3 +1,11 @@
+# nRainTd's notes vault
+
+[nRainTd(No Rain Today, 饯雨)的笔记仓库](https://notes.nraintd.xyz/)的源码仓库，基于 Quartz v4 构建，使用 Github Pages 来部署静态页面。
+
+这个源码仓库 fork 了 Quartz4 的官方模板仓库，然后在这基础上自定义了一些内容; 我自己的笔记是写在 `content/` 目录下面。
+
+我把 Quartz4 模板仓库中原来的 `README.md` 保留在下面了，感兴趣的朋友可以跟过去看看他们的文档。
+
 # Quartz v4
 
 > “[One] who works with the door open gets all kinds of interruptions, but [they] also occasionally gets clues as to what the world is and what might be important.” — Richard Hamming
