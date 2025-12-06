@@ -1,0 +1,1 @@
+1. 对于空文件夹，`git init` 后，默认有一个 `master` 分支，但使用 `git branch` 命令后不会显示任何分支，也无法通过 `git branch branchName` 创建任何分支。对空文件夹使用 `git commit` 命令后也如此；只能先创建一个文件，再 `git commit` ，才能正常使用上述命令。
