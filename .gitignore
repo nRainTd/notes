@@ -14,3 +14,4 @@ BatchRun.ffs_batch
 sync.ffs_db
 /content/**
 !/content/.gitignore
+!/content/NOTICE.txt
