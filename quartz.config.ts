@@ -9,7 +9,7 @@ import * as Plugin from "./quartz/plugins"
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "nRainTd",
-    pageTitleSuffix: "",
+    pageTitleSuffix: " | nRainTd",
     enableSPA: true,
     enablePopovers: true,
     analytics: {
@@ -18,23 +18,23 @@ const config: QuartzConfig = {
     locale: "zh-CN",
     baseUrl: "notes.nRainTd.xyz",
     ignorePatterns: ["private", "templates", ".obsidian"],
-    defaultDateType: "modified",
+    defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
         header: "Schibsted Grotesk",
         body: "Source Sans Pro",
-        // code: "IBM Plex Mono",
-        code: "Consolas",
+        code: "IBM Plex Mono",
       },
       colors: {
         lightMode: {
           light: "#faf8f8",
-          lightgray: "#e5e5e5",
+          // lightgray: "#e5e5e5", // 内联代码块
+          lightgray: "#EFF1F5", // 内联代码块
           gray: "#b8b8b8",
-          darkgray: "#4e4e4e",
-          dark: "#2b2b2b",
+          darkgray: "#4e4e4e", // 普通文字
+          dark: "#2b2b2b", // 笔记 1~6 级标题
           secondary: "#284b63",
           tertiary: "#84a59d",
           highlight: "rgba(143, 159, 169, 0.15)",
@@ -63,10 +63,10 @@ const config: QuartzConfig = {
       }),
       Plugin.SyntaxHighlighting({
         theme: {
-          light: "github-light",
-          dark: "github-dark",
+          light: "catppuccin-latte",
+          dark: "catppuccin-mocha",
         },
-        keepBackground: false,
+        keepBackground: true,
       }),
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }),
       Plugin.GitHubFlavoredMarkdown(),
