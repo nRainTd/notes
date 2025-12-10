@@ -33,7 +33,7 @@ export default {
       title: "阅读模式",
     },
     explorer: {
-      title: "探索",
+      title: "文件列表",
     },
     footer: {
       createdWith: "Created with",
@@ -47,7 +47,7 @@ export default {
     },
     transcludes: {
       transcludeOf: ({ targetSlug }) => `包含${targetSlug}`,
-      linkToOriginal: "指向原始笔记的链接",
+      linkToOriginal: "原始笔记链接",
     },
     search: {
       title: "搜索",
@@ -57,7 +57,7 @@ export default {
       title: "目录",
     },
     contentMeta: {
-      readingTime: ({ minutes }) => `${minutes}分钟阅读`,
+      readingTime: ({ minutes }) => `预计需要${minutes}分钟读完`,
     },
   },
   pages: {
@@ -72,7 +72,7 @@ export default {
     },
     folderContent: {
       folder: "文件夹",
-      itemsUnderFolder: ({ count }) => `此文件夹下有${count}条笔记。`,
+      itemsUnderFolder: ({ count }) => `此文件夹下有${count}条项目。`,
     },
     tagContent: {
       tag: "标签",
