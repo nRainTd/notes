@@ -13,7 +13,7 @@ const config: QuartzConfig = {
     enableSPA: true,
     enablePopovers: true,
     analytics: {
-      provider: "plausible",
+      provider: "cabin",
     },
     locale: "zh-CN",
     baseUrl: "notes.nRainTd.cn",
