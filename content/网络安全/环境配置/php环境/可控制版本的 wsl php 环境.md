@@ -1,58 +1,20 @@
 ---
-创建: 2025-09-01
+created: 2025-09-01
 tags:
   - CTF/Web/环境配置/linux_php环境
 ---
 
-# 目录  ^toc
-
-- [[#目录  ^toc|目录]]
-- [[#概述|概述]]
-- [[#php cli 的版本控制|php cli 的版本控制]]
-	- [[#1 添加 `ppa:ondrej/php` 仓库|1 添加 `ppa:ondrej/php` 仓库]]
-	- [[#2 安装 php|2 安装 php]]
-		- [[#2.1 安装本体|2.1 安装本体]]
-		- [[#2.2 安装插件|2.2 安装插件]]
-			- [[#2.2.1 查看拓展|2.2.1 查看拓展]]
-				- [[#查看已安装的外部拓展|查看已安装的外部拓展]]
-				- [[#查看已启用拓展|查看已启用拓展]]
-			- [[#2.2.2 安装拓展到某个php版本|2.2.2 安装拓展到某个php版本]]
-	- [[#3 使用 `update-alternatives` 管理版本|3 使用 `update-alternatives` 管理版本]]
-		- [[#3.1 查看已安装软件版本|3.1 查看已安装软件版本]]
-		- [[#3.2 注册软件版本|3.2 注册软件版本]]
-		- [[#3.3 查看已注册版本|3.3 查看已注册版本]]
-		- [[#3.4 切换版本|3.4 切换版本]]
-			- [[#3.4.1 交互式切换|3.4.1 交互式切换]]
-			- [[#3.4.2 非交互切换|3.4.2 非交互切换]]
-		- [[#3.5 清除软链接|3.5 清除软链接]]
-			- [[#3.5.1 清除特定版本|3.5.1 清除特定版本]]
-			- [[#3.5.2 清除全部|3.5.2 清除全部]]
-- [[#apache2 php 版本控制|apache2 php 版本控制]]
-	- [[#1 问题|1 问题]]
-	- [[#2 `mod_php` 切换版本|2 `mod_php` 切换版本]]
-		- [[#2.1 安装|2.1 安装]]
-		- [[#2.2 配置文件|2.2 配置文件]]
-		- [[#2.3 切换版本|2.3 切换版本]]
-			- [[#2.3.1 先禁用旧版本 `mod_php`|2.3.1 先禁用旧版本 `mod_php`]]
-			- [[#2.3.2 再启用新版本 `mod_php`|2.3.2 再启用新版本 `mod_php`]]
-			- [[#2.3.3 重启 `apache`|2.3.3 重启 `apache`]]
-	- [[#3 `php_fpm` 切换版本|3 `php_fpm` 切换版本]]
-		- [[#3.1 安装|3.1 安装]]
-		- [[#3.2 启动 `php-fpm` 常驻|3.2 启动 `php-fpm` 常驻]]
-		- [[#3.3 在 `apache` 启用|3.3 在 `apache` 启用]]
-			- [[#3.3.1 启用 `proxy_fcgi` 模块|3.3.1 启用 `proxy_fcgi` 模块]]
-			- [[#3.3.2 启用 `setenvif` 模块|3.3.2 启用 `setenvif` 模块]]
-			- [[#3.3.3 启用 `php8.4-fpm.conf` 配置|3.3.3 启用 `php8.4-fpm.conf` 配置]]
-			- [[#3.3.4 重启 `apache`|3.3.4 重启 `apache`]]
-		- [[#3.4 切换版本|3.4 切换版本]]
-			- [[#3.4.1 关闭旧的 `phpx.x-fpm`|3.4.1 关闭旧的 `phpx.x-fpm`]]
-			- [[#3.4.2 启动新的 `phpx.x-fpm`|3.4.2 启动新的 `phpx.x-fpm`]]
-			- [[#3.4.3 停用旧的 `phpx.x-fpm.conf`|3.4.3 停用旧的 `phpx.x-fpm.conf`]]
-			- [[#3.4.4 启用新的 `phpx.x-fpm.conf`|3.4.4 启用新的 `phpx.x-fpm.conf`]]
-			- [[#3.4.5 重启 `apache`|3.4.5 重启 `apache`]]
-- [[#总结|总结]]
-
-
+```table-of-contents
+title: 
+style: nestedList # TOC style (nestedList|nestedOrderedList|inlineFirstLevel)
+minLevel: 0 # Include headings from the specified level
+maxLevel: 0 # Include headings up to the specified level
+include: 
+exclude: 
+includeLinks: true # Make headings clickable
+hideWhenEmpty: false # Hide TOC if no headings are found
+debugInConsole: false # Print debug info in Obsidian console
+```
 
 # 概述
 为了平时测试的时候能模拟一些只有在 `linux` 上才好模拟的 php 环境，遂在我的 ubuntu wsl 上配置了一下可以切换版本的 php 后端环境。

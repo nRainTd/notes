@@ -1,21 +1,20 @@
 ---
-创建: 2025-11-02
+created: 2025-11-02
 tags:
   - CTF/比赛/25/领航杯初赛/Web
 ---
 
-# easygo  ^toc
-
-- [[#easygo  ^toc|easygo]]
-	- [[#1 `/auth/login` 路由|1 `/auth/login` 路由]]
-	- [[#2 `/game` 路由|2 `/game` 路由]]
-	- [[#3 `/play/` 路由|3 `/play/` 路由]]
-		- [[#3.1 `/play/guess` 路由|3.1 `/play/guess` 路由]]
-		- [[#3.2 `/play/add` 路由|3.2 `/play/add` 路由]]
-	- [[#4 解题思路|4 解题思路]]
-	- [[#5 `sessions` 探究|5 `sessions` 探究]]
-	- [[#6 `math/rand` 特性|6 `math/rand` 特性]]
-	- [[#7 解题|7 解题]]
+```table-of-contents
+title: 
+style: nestedList # TOC style (nestedList|nestedOrderedList|inlineFirstLevel)
+minLevel: 0 # Include headings from the specified level
+maxLevel: 0 # Include headings up to the specified level
+include: 
+exclude: 
+includeLinks: true # Make headings clickable
+hideWhenEmpty: false # Hide TOC if no headings are found
+debugInConsole: false # Print debug info in Obsidian console
+```
 
 这题给了源码包，让我们分析一下
 ![[领航杯复现-251102-212232.png]]

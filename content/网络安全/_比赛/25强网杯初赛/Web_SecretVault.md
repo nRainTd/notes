@@ -1,29 +1,20 @@
 ---
-创建: 2025-11-07
+created: 2025-11-07
 tags:
   - CTF/比赛/25/强网杯初赛/Web
 ---
 
-# SecretVault  ^toc
-
-- [[#SecretVault  ^toc|SecretVault]]
-	- [[#1 概览|1 概览]]
-		- [[#1.1 描述|1.1 描述]]
-		- [[#1.2 架构|1.2 架构]]
-		- [[#1.3 功能|1.3 功能]]
-	- [[#2 源码概况|2 源码概况]]
-		- [[#2.1 源码|2.1 源码]]
-			- [[#2.1.1 `main.go`|2.1.1 `main.go`]]
-		- [[#2.2 `app.py`|2.2 `app.py`]]
-		- [[#2.3 概况|2.3 概况]]
-			- [[#2.3.1 代理和 Jwt 鉴权|2.3.1 代理和 Jwt 鉴权]]
-			- [[#2.3.2 密码仓库|2.3.2 密码仓库]]
-	- [[#3 解题|3 解题]]
-		- [[#3.1 `X-User` 缺省值|3.1 `X-User` 缺省值]]
-		- [[#3.2 `Connection: X-User` 删掉 `X-User`|3.2 `Connection: X-User` 删掉 `X-User`]]
-		- [[#3.3 `Connection` 研究|3.3 `Connection` 研究]]
-			- [[#3.3.1 规范|3.3.1 规范]]
-			- [[#3.3.2 实现|3.3.2 实现]]
+```table-of-contents
+title: 
+style: nestedList # TOC style (nestedList|nestedOrderedList|inlineFirstLevel)
+minLevel: 0 # Include headings from the specified level
+maxLevel: 0 # Include headings up to the specified level
+include: 
+exclude: 
+includeLinks: true # Make headings clickable
+hideWhenEmpty: false # Hide TOC if no headings are found
+debugInConsole: false # Print debug info in Obsidian console
+```
 
 ## 1 概览
 

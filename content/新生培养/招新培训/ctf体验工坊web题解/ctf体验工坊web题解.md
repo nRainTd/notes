@@ -1,21 +1,19 @@
 ---
-创建: 2025-09-16
+created: 2025-09-16
 tags:
 ---
 
-# 目录  ^toc
-
-- [[#目录  ^toc|目录]]
-- [[#题目|题目]]
-	- [[#1 can_you_catch_img|1 can_you_catch_img]]
-	- [[#2 transfer_money|2 transfer_money]]
-	- [[#3 ez_rand|3 ez_rand]]
-	- [[#4 ez_unser|4 ez_unser]]
-	- [[#5 know_git|5 know_git]]
-	- [[#6 ez_include|6 ez_include]]
-	- [[#7 ez-upload|7 ez-upload]]
-	- [[#8 ez_sql|8 ez_sql]]
-	- [[#9 pro_sql|9 pro_sql]]
+```table-of-contents
+title: 
+style: nestedList # TOC style (nestedList|nestedOrderedList|inlineFirstLevel)
+minLevel: 0 # Include headings from the specified level
+maxLevel: 0 # Include headings up to the specified level
+include: 
+exclude: 
+includeLinks: true # Make headings clickable
+hideWhenEmpty: false # Hide TOC if no headings are found
+debugInConsole: false # Print debug info in Obsidian console
+```
 
 # 题目
 
