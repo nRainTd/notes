@@ -15,6 +15,14 @@ hideWhenEmpty: false # Hide TOC if no headings are found
 debugInConsole: false # Print debug info in Obsidian console
 ```
 
+# 概述
+
+xxCTF 是 2025 年 12 月 6 日我们四个学校网络安全社团为了考核新生而办的联合赛，其中 Web 方向有四道题是我们社团出的，这四道题中有三道是我出 (改编) 的；
+
+这篇笔记是我写的 `wp` 的原稿。
+
+# 题目
+
 ## 1 ezez_ssrf
 
 > [!info]

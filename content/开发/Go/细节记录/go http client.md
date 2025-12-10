@@ -1,5 +1,7 @@
 ---
 created: 2025-12-01
+tags:
+  - 开发/Go/细节
 ---
 在 `go` 中，对于同一个 `http.Client`，即：
 
