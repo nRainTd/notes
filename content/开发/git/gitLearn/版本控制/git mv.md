@@ -1,3 +1,6 @@
+---
+created: 2024-10-10
+---
 `git mv oldName newName`
 改名，相当于：
 ``` bash

@@ -1,3 +1,6 @@
+---
+created: 2024-10-10
+---
 1. `git switch <branchName>` 切换分支
 
 2. `git switch -c <branchName>` 新建并切换到分支

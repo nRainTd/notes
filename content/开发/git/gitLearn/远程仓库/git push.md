@@ -1,3 +1,6 @@
+---
+created: 2024-10-10
+---
 1. `git push <remoteName> <branchName>` ：向远程仓库推送**某个分支**，需要验证身份。貌似只需要验证一次身份，之后就能一直 `push` 了。
 ![[git_push_gitee_main.png | 300]]
 2. 运行此命令之前必须保证最后一次 pull 后没做任何更改，否则无法提交。

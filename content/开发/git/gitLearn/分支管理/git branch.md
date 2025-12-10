@@ -1,3 +1,6 @@
+---
+created: 2024-10-10
+---
 1. `git branch` ：查看分支
 
 2. `git branch <branchName>` ：创建名为 branchName 的新分支
