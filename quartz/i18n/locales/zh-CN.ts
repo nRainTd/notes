@@ -47,7 +47,7 @@ export default {
     },
     transcludes: {
       transcludeOf: ({ targetSlug }) => `包含${targetSlug}`,
-      linkToOriginal: "原始笔记链接",
+      linkToOriginal: "去往原始笔记",
     },
     search: {
       title: "搜索",
@@ -57,7 +57,7 @@ export default {
       title: "目录",
     },
     contentMeta: {
-      readingTime: ({ minutes }) => `预计需要${minutes}分钟读完`,
+      readingTime: ({ minutes }) => `预计花费${minutes}分钟阅读`,
     },
   },
   pages: {
@@ -71,8 +71,8 @@ export default {
       home: "返回首页",
     },
     folderContent: {
-      folder: "文件夹",
-      itemsUnderFolder: ({ count }) => `此文件夹下有${count}条项目。`,
+      folder: "目录",
+      itemsUnderFolder: ({ count }) => `此目录下共${count}个项目。`,
     },
     tagContent: {
       tag: "标签",

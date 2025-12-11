@@ -5,7 +5,18 @@ import * as Component from "./quartz/components"
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
-  afterBody: [],
+  afterBody: [
+    Component.Comments({
+      provider: "giscus",
+      options: {
+        repo: "nRainTd/notes",
+        repoId: "R_kgDOQi-FrA",
+        category: "Announcements",
+        categoryId: "DIC_kwDOQi-FrM4Czpff",
+        lang: "zh-CN",
+      },
+    }),
+  ],
   footer: Component.Footer({
     links: {
       "© nRainTd - CC BY 4.0": "https://creativecommons.org/licenses/by/4.0/",
