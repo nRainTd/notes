@@ -5,3 +5,12 @@ pre,
 code {
   tab-size: 2;
 }
+
+pre > code {
+  font-size: 1rem;
+}
+
+pre > code > [data-line]:before {
+  content: none;
+  display: none;
+}
