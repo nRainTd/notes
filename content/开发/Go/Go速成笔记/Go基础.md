@@ -2,6 +2,7 @@
 created: 2025-10-21
 tags:
   - 开发/Go/基础语法
+modified: 2026-01-24
 ---
 
 ```table-of-contents
@@ -2292,6 +2293,139 @@ testPanic2上半部分
 testPanic3上半部分
 testPanic1下半部分
 程序结束
+```
+
+#### 7.7.5 有返回值的函数 `panic`
+
+对于没有返回值的函数，内部 `panic` 之后，只要在那个函数的 `defer` 中 `recover` 并妥善处理之后，那对于调用者来说这个函数就和普通函数没有区别，函数内部是否 `panic` 对调用方来说是透明的；
+
+但是，如果这个函数有返回值，那么函数内部发生 `panic` 并被 `recover` 捕获后，它的返回值在 `panic` 跳过了 `return` 语句的执行后，会是什么呢？(对于调用方来说，这个函数是必须返回一个返回值的，要不然就不是静态强类型语言了)。
+
+这要分这个函数的返回值是匿名返回值还是具名返回值。
+
+##### 匿名返回值函数 `panic`
+
+对于匿名返回值函数来说，`panic` 后返回值为返回值类型的零值
+
+```go
+package main
+
+import (
+	"fmt"
+	"runtime"
+)
+
+func main() {
+	fmt.Println(MustInt("123"))
+}
+
+// 仅演示用，无实际意义
+func MustInt(v any) int {
+	defer func() {
+		if r := recover(); r != nil {
+			pc, _, _, _ := runtime.Caller(3)
+			fmt.Println("On calling ", runtime.FuncForPC(pc).Name())
+			fmt.Println("> " + r.(string))
+		}
+	}()
+	i, ok := v.(int)
+	if !ok {
+		panic("v 必须是 int 类型")
+	}
+	return i + 1
+}
+```
+
+```
+On calling  main.main
+> v 必须是 int 类型
+0
+```
+
+上面的例子中，当执行到 `panic` 的时候，下面的 `return i + 1` 是不会被执行的，因此就算 `v.(int)` 在有 `ok` 接收时把 `i` 赋值为了零值 `0`，后面也不会返回 `i + 1` 的结果 `1`(因为 `return` 语句压根没被执行)，这时候返回值会被自动赋值为返回值类型的零值 (对于 `int` 类型来说，就是 `0`)。
+
+##### 具名返回值函数 `panic`
+
+对于具名返回值函数来说，如果在 `panic` 之前或 `recover` 后没有修改过具名返回值变量的值，那么返回值会是返回值类型的零值；如果在上述时机修改过，那么返回值将是修改后的值。
+
+如下面的例子所示：
+
+```go
+package main
+
+import (
+	"fmt"
+	"runtime"
+)
+
+func main() {
+	fmt.Println(MustInt("123"))
+}
+
+// 仅演示用，无实际意义
+func MustInt(v any) (res int) {
+	defer func() {
+		if r := recover(); r != nil {
+			pc, _, _, _ := runtime.Caller(3)
+			fmt.Println("On calling ", runtime.FuncForPC(pc).Name())
+			fmt.Println("> " + r.(string))
+			fmt.Println("> res 修改前", res)
+			res = -1
+		}
+	}()
+	i, ok := v.(int)
+	if !ok {
+		panic("v 必须是 int 类型")
+	}
+	return i + 1
+}
+```
+
+```
+On calling  main.main
+> v 必须是 int 类型
+> res 修改前 0
+-1
+```
+
+在上面的例子中，虽然 `return i + 1` 也没被执行，返回值会是 `0`，但是我们在 `recover` 所在的 `defer` 中，可以通过闭包修改具名返回值 `res` 为 `-1`，这样我们 `MustInt` 的返回值就成 `-1` 了。
+
+##### 最佳实践
+
+对于可能 `panic` 的函数，为了不让程序直接崩溃 (例如作为服务端，我们不能因为一个请求处理中发生错误，就让整个程序异常退出，影响到其他请求)，我们就可以把异常转化为普通错误去返回给调用方处理；
+
+具体来说就是利用具名返回值，在发生 `panic` 时用 `recover` 恢复，并把错误信息赋值到 `err` 具名返回值中，这样调用方就能像处理普通函数那样，去判断 `if err != nil` 来把异常当作普通错误处理了。
+
+```go
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+func main() {
+	res, err := NotMustInt("123")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(res)
+}
+
+// 仅演示用，无实际意义
+func NotMustInt(v any) (res int, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New(r.(string))
+		}
+	}()
+	i, ok := v.(int)
+	if !ok {
+		panic("v 必须是 int 类型")
+	}
+	return i + 1, nil
+}
 ```
 
 ## 8 方法
