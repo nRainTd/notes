@@ -2,6 +2,7 @@
 created: 2026-01-28
 modified: 2026-01-28
 tags:
+  - CTF/应急响应
 ---
 
 ```table-of-contents

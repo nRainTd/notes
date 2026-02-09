@@ -2,6 +2,7 @@
 created: 2026-01-30
 modified: 2026-01-30
 tags:
+  - CTF/应急响应
 ---
 
 ```table-of-contents
@@ -124,7 +125,7 @@ flag{2025.8.25_10:43}
 
 `Wp` 中提供的是查找 `Windows Event Log` 的事件 `id` 为 `5001` 的记录，微软的文档中称这个事件代表 `Windows Defender` 病毒扫描被关闭。
 
-> [!quote] https://learn.microsoft.com/zh-cn/defender-endpoint/troubleshoot-service-startup-problems #知识/Windows_Event_Log/ID/5001
+> [!quote] https://learn.microsoft.com/zh-cn/defender-endpoint/troubleshoot-service-startup-problems #知识/Windows/Windows_Event_Log/ID/5001
 > ![[实战Live勒索病毒溯源排查-260131-170828.png]]
 
 去事件查看器 (`eventvwr.msc`) 的「应用程序和服务日志/Microsorf/Windows/Windows Defender/Operational」中查看这个事件 `id` 对应的时间，为 `2025/8/25 10:45`
@@ -249,7 +250,7 @@ flag{E:\ruoyi\ruoyi-admin.jar}
 
 ![[实战Live勒索病毒溯源排查-260201-172935.png]]
 
-> [!note] #知识/Windows_Event_Log/ID/4624
+> [!note] #知识/Windows/Windows_Event_Log/ID/4624
 > https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4624
 > 
 > 表示成功登录 `Windows` 账户，它的不同登录类型的含义如下：
