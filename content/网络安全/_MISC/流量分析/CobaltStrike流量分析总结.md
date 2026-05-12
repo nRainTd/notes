@@ -109,13 +109,13 @@ python .\1768.py .\FJwV
 > [!cite]
 > https://github.com/Slzdude/cs-scripts/blob/master/parse_beacon_keys.py
 
-实例：[[CobaltStrike流量分析#4.2.2 方法一：从 `.cobaltstrike.beacon_keys` 提取私钥]]
+实例：[[CobaltStrike流量分析#方法一：从 `.cobaltstrike.beacon_keys` 提取私钥|从 `.cobaltstrike.beacon_keys` 提取私钥]]
 
 ##### 方法二：rsa 分解 n 计算私钥
 
 如果没法读到 `.cobaltstrike.beacon_keys` 文件，我们还可以利用从 `beacon` 本体解析出的 `rsa` 公钥，提取出 `e` 和 `n`；然后用 `yafu` 等手段因数分解 `n` 得到 `p` 和 `q`，进而用 `q p n e` 解出 `e`，从而得到私钥 `(e, n)`。
 
-实例：[[CobaltStrike流量分析#方法二：rsa 分解 n 计算私钥]]
+实例：[[CobaltStrike流量分析#方法二：rsa 分解 n 计算私钥|rsa 分解 n 计算私钥]]
 
 #### 5.2.2 用私钥解密元数据获取 raw_key
 
@@ -130,7 +130,7 @@ python .\1768.py .\FJwV
 python cs-decrypt-metadata.py -p <十六进制私钥> <base64编码后的 rsa 加密元数据>
 ```
 
-实例：[[CobaltStrike流量分析#4.2.2 用私钥解密加密元数据得到 `raw_key`]]
+实例：[[CobaltStrike流量分析#4.2.2 用私钥解密加密元数据得到 `raw_key`|用私钥解密元数据获取 raw_key]]
 
 #### 5.2.3 解密流量包
 
